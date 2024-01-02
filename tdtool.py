@@ -126,17 +126,17 @@ def doMethod(deviceId, methodId, methodValue = 0):
 def doRequest(method, params):
 	global config
 	consumer = oauth(PUBLIC_KEY, client_secret=PRIVATE_KEY, resource_owner_key=config['token'], resource_owner_secret=config['tokenSecret'])
-	response = requests.post(url="http://api.telldus.com/json/" + method, data=params, auth=consumer)
+	response = requests.post(url="https://pa-api.telldus.com/json/" + method, data=params, auth=consumer)
 	return json.loads(response.content.decode('utf-8'))
 
 def requestToken():
 	global config
 	consumer = oauth(PUBLIC_KEY, client_secret=PRIVATE_KEY, resource_owner_key=None, resource_owner_secret=None)
-	request = requests.post(url='http://api.telldus.com/oauth/requestToken', auth=consumer)
+	request = requests.post(url='https://pa-api.telldus.com/oauth/requestToken', auth=consumer)
 	credentials = parse_qs(request.content.decode('utf-8'))
 	key = credentials.get('oauth_token')[0]
 	token = credentials.get('oauth_token_secret')[0]
-	print('Open the following url in your webbrowser:\nhttp://api.telldus.com/oauth/authorize?oauth_token=%s\n' % key)
+	print('Open the following url in your webbrowser:\nhttps://pa-api.telldus.com/oauth/authorize?oauth_token=%s\n' % key)
 	print('After logging in and accepting to use this application run:\n%s --authenticate' % (sys.argv[0]))
 	config['requestToken'] = str(key)
 	config['requestTokenSecret'] = str(token)
@@ -145,7 +145,7 @@ def requestToken():
 def getAccessToken():
 	global config
 	consumer = oauth(PUBLIC_KEY, client_secret=PRIVATE_KEY, resource_owner_key=config['requestToken'], resource_owner_secret=config['requestTokenSecret'])
-	request = requests.post(url='http://api.telldus.com/oauth/accessToken', auth=consumer)
+	request = requests.post(url='https://pa-api.telldus.com/oauth/accessToken', auth=consumer)
 	credentials = parse_qs(request.content.decode('utf-8'))
 	if request.status_code != 200:
 		print('Error retreiving access token, the server replied:\n%s' %request.content)
